@@ -1,0 +1,39 @@
+pragma solidity = 0.6.0;
+
+contract Registration {
+ //Adresse de l'autorité réglementaire
+    address public Regulatory_Authority;
+    
+    mapping(address => bool) public PowerPlant; 
+    mapping(address => bool) public CO2_Capture_Facility_Provider; 
+    mapping(address=> bool) public CO2_Transporter; 
+    mapping(address => bool) public CO2_Storage_Facility_Provider; 
+    mapping(address => bool) public CO2_Buyer; 
+      
+    modifier onlyRegulatory_Authority {
+        require(msg.sender == Regulatory_Authority, "Sender not authorized.");
+        _;
+    }   
+    
+    constructor() public{
+        Regulatory_Authority = msg.sender;
+    }
+    
+    function registerPowerPlant(address p) external onlyRegulatory_Authority {
+        require(!PowerPlant[p], "PowerPlant exists already");
+        PowerPlant[p] = true;
+    }
+    // Autres fonctions similaires pour enregistrer les rôles
+}
+
+contract CCUS{
+    uint256 totalCO2Emitted;
+    uint256 totalCO2Leakage;
+    uint256 totalCO2Remain;
+    Registration public registrationContract;
+
+    constructor(address registration) public {
+        registrationContract = Registration(registration);
+    }
+
+}
